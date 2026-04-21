@@ -43,18 +43,48 @@
 set -euo pipefail
 
 # =============================================================================
-# ✏️  CONFIGURATION — EDIT THESE TO MATCH YOUR DATA
+# CONFIGURATION
 # =============================================================================
+# Paths are loaded automatically from config.sh (written by 00_download_data.sh).
+# Run the download script first:
+#   bash scripts/00_download_data.sh SRRxxxxxxxx
+#
+# You can also override any variable before running:
+#   DRAFT_ASSEMBLY=results/flye/assembly.fasta bash scripts/02_pipeline_polish.sh
+
+CONFIG="config.sh"
+if [ -f "$CONFIG" ]; then
+    # source : run config.sh in THIS shell so its variables are visible here
+    # shellcheck source=/dev/null
+    source "$CONFIG"
+    echo "  Loaded settings from config.sh"
+    echo "    ILLUMINA_R1 = ${ILLUMINA_R1:-<not set>}"
+    echo "    ILLUMINA_R2 = ${ILLUMINA_R2:-<not set>}"
+    echo ""
+else
+    echo ""
+    echo "  ERROR: config.sh not found."
+    echo "  Run the download script first:"
+    echo "    bash scripts/00_download_data.sh SRRxxxxxxxx"
+    echo ""
+    echo "  Or set paths manually:"
+    echo "    export ILLUMINA_R1=data/raw/SRRxxxxxxxx_1.fastq"
+    echo "    export ILLUMINA_R2=data/raw/SRRxxxxxxxx_2.fastq"
+    echo "    export DRAFT_ASSEMBLY=results/flye/assembly.fasta"
+    echo "    bash scripts/02_pipeline_polish.sh"
+    echo ""
+fi
 
 # --- Input files ---
 
-# Draft assembly to be polished.
-# This is typically the output of Flye (assembly.fasta) or any other assembler.
-DRAFT_ASSEMBLY="${DRAFT_ASSEMBLY:-results/flye/assembly.fasta}"
+# Draft assembly to be polished — set this to your assembler output.
+# Pipeline 1 produces: results/spades/assembly_hybrid/scaffolds.fasta
+# Flye produces:       results/flye/assembly.fasta
+DRAFT_ASSEMBLY="${DRAFT_ASSEMBLY:-results/spades/assembly_hybrid/scaffolds.fasta}"
 
-# Illumina paired-end reads used for polishing
-ILLUMINA_R1="${ILLUMINA_R1:-data/raw/illumina_R1.fastq}"
-ILLUMINA_R2="${ILLUMINA_R2:-data/raw/illumina_R2.fastq}"
+# Illumina paired-end reads (loaded from config.sh above, or set manually)
+ILLUMINA_R1="${ILLUMINA_R1:-}"
+ILLUMINA_R2="${ILLUMINA_R2:-}"
 
 # GTF annotation file for the organism.
 # Download from NCBI RefSeq:
@@ -110,7 +140,13 @@ ok()        { echo -e "${GREEN}✓  $1${NC}"; }
 warn()      { echo -e "${YELLOW}⚠  $1${NC}"; }
 die()       { echo -e "${RED}ERROR: $1${NC}" >&2; exit 1; }
 
-require_file() { [ -f "$1" ] || die "File not found: $1 (variable: $2)"; }
+require_file() {
+    if [ -z "${1:-}" ] || [ ! -f "$1" ]; then
+        die "File not found: '${1:-<empty>}' (variable: $2)\n\
+       Fix: run  bash scripts/00_download_data.sh SRRxxxxxxxx\n\
+       Or set:  export $2=/path/to/file"
+    fi
+}
 
 # =============================================================================
 # PRE-FLIGHT CHECKS
