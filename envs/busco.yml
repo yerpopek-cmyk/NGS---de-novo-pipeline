@@ -1,0 +1,21 @@
+name: busco_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - busco=6.0.0
+  - augustus=3.5.0
+  - bbmap
+  - hmme
+  - metaeuk
+  - miniprot
+  - prodigal
+  - sepp=4.5.5
+  - blast
+  - wget
+  - curl
+  - ca-certificates
+  - libgcc-ng
+  - libstdcxx-ng

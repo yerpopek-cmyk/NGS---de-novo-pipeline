@@ -1,0 +1,31 @@
+name: polishing_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.10
+  - bwa=0.7.19
+  - samtools=1.20
+  - bedtools=2.31.1
+  - pilon=1.24
+  - seqkit=2.10.0
+  - seqtk=1.4
+  - spades=4.0.0
+  - sra-tools=3.1.1
+  - longstitch=1.0.1
+  - sibelia=3.0.7
+  - circos=0.69.9
+  - openjdk=17
+  - pigz
+  - parallel
+  - coreutils
+  - findutils
+  - grep
+  - sed
+  - gawk
+  - wget
+  - curl
+  - ca-certificates
+  - libgcc-ng
+  - libstdcxx-ng

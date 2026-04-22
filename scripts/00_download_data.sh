@@ -176,7 +176,7 @@ fasterq-dump \
     # --outdir       : where to write the .fastq files
     # --split-files  : write R1 and R2 to separate files (IMPORTANT for paired-end)
     # --threads      : number of parallel threads (speeds up conversion)
-    # --progress     : show a progress bar
+    # --progress     : show a progress ba
     # --temp         : temporary working directory (will be deleted below)
 
 # =============================================================================
