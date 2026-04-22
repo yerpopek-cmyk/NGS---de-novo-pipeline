@@ -12,6 +12,7 @@ NGS---de-novo-pipeline/
 │   ├── polishing.yml
 │   └── busco.yml
 ├── scripts/
+│   ├── 00_download_data.sh
 │   ├── 01_pipeline_hybrid.sh
 │   └── 02_pipeline_polish.sh
 ├── data/
@@ -32,10 +33,18 @@ bash setup.sh
 Download reads before running the pipelines:
 
 ```bash
-bash scripts/00_download_data.sh SRR25745292
+bash scripts/00_download_data.sh SRRxxxxxxxx
 ```
 
-Edit `config.sh` if you need to point to different read files, a different draft assembly, or a different BUSCO lineage.
+`SRR25745292` is only a teaching example. Students should normally replace it with their own accession.
+
+After downloading, review `config.sh` and update any organism-specific settings you need:
+
+- `NANOPORE` if you also have long reads
+- `GENOME_SIZE`
+- `BUSCO_LINEAGE`
+- `GTF_FILE`
+- `REGION_CONTIG`, `REGION_START`, `REGION_END` for the optional reporting step
 
 Run the pipelines from the repository root:
 
