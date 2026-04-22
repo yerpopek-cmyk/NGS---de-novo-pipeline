@@ -24,6 +24,8 @@ NANOPORE="${NANOPORE:-}"
 GENOME_SIZE="${GENOME_SIZE:-5000000}"
 DRAFT_ASSEMBLY="${DRAFT_ASSEMBLY:-results/spades/assembly_hybrid/scaffolds.fasta}"
 GTF_FILE="${GTF_FILE:-data/reference/annotation.gtf}"
+PILON_FIX_TYPES="${PILON_FIX_TYPES:-snps,indels}"
+PILON_JAVA_XMX="${PILON_JAVA_XMX:-8g}"
 
 # BUSCO datasets are stored under:
 #   data/db/busco_downloads/lineages/<BUSCO_LINEAGE>

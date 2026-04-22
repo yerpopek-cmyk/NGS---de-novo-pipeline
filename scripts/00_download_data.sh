@@ -251,6 +251,10 @@ DRAFT_ASSEMBLY="\${DRAFT_ASSEMBLY:-results/spades/assembly_hybrid/scaffolds.fast
 # Optional annotation file for the region-reporting step in pipeline 2
 GTF_FILE="\${GTF_FILE:-data/reference/annotation.gtf}"
 
+# Pilon memory / correction settings
+PILON_FIX_TYPES="\${PILON_FIX_TYPES:-snps,indels}"
+PILON_JAVA_XMX="\${PILON_JAVA_XMX:-8g}"
+
 # BUSCO configuration — change the lineage to match your organism
 BUSCO_DB_DIR="\${BUSCO_DB_DIR:-data/db/busco_downloads}"
 BUSCO_LINEAGE="\${BUSCO_LINEAGE:-vibrio_odb12}"

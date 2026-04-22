@@ -95,6 +95,8 @@ POLISH_ENV="${POLISH_ENV:-polishing_env}"
 THREADS="${THREADS:-6}"
 FORCE_RERUN="${FORCE_RERUN:-false}"
 CHECKPOINT_DIR="$(abs_path "${CHECKPOINT_DIR:-results/.checkpoints}")"
+PILON_FIX_TYPES="$(trim_cr "${PILON_FIX_TYPES:-snps,indels}")"
+PILON_JAVA_XMX="$(trim_cr "${PILON_JAVA_XMX:-8g}")"
 
 ILLUMINA_R1="$(abs_path "${ILLUMINA_R1:-}")"
 ILLUMINA_R2="$(abs_path "${ILLUMINA_R2:-}")"
@@ -125,6 +127,8 @@ echo "    BUSCO_LINEAGE = $BUSCO_LINEAGE"
 echo "    THREADS       = $THREADS"
 echo "    BUSCO_ENV     = $BUSCO_ENV"
 echo "    POLISH_ENV    = $POLISH_ENV"
+echo "    PILON_FIX     = $PILON_FIX_TYPES"
+echo "    PILON_XMX     = $PILON_JAVA_XMX"
 
 step "PRE-FLIGHT CHECKS"
 require_command micromamba
@@ -212,14 +216,18 @@ step "STEP 6 — Pilon"
 if checkpoint_done "15_pilon" && [ -f "$PILON_FASTA" ]; then
     ok "Skipping Pilon (checkpoint found)."
 else
-    run_polish pilon \
-        --genome "$ASSEMBLY_COPY" \
-        --frags "$BAM_FILE" \
-        --output pilon \
-        --outdir "$DIR_PILON" \
-        --changes \
-        --vcf \
-        --threads "$THREADS"
+    run_polish bash -lc "
+        set -euo pipefail
+        export JAVA_TOOL_OPTIONS='-Xmx${PILON_JAVA_XMX}'
+        pilon \
+            --genome '$ASSEMBLY_COPY' \
+            --frags '$BAM_FILE' \
+            --output pilon \
+            --outdir '$DIR_PILON' \
+            --changes \
+            --vcf \
+            --fix '${PILON_FIX_TYPES}'
+    "
     require_file "$PILON_FASTA" "PILON_FASTA"
     mark_checkpoint "15_pilon"
     ok "Pilon polishing complete."
