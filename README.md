@@ -29,6 +29,12 @@ cd NGS---de-novo-pipeline
 bash setup.sh
 ```
 
+Download reads before running the pipelines:
+
+```bash
+bash scripts/00_download_data.sh SRR25745292
+```
+
 Edit `config.sh` if you need to point to different read files, a different draft assembly, or a different BUSCO lineage.
 
 Run the pipelines from the repository root:
